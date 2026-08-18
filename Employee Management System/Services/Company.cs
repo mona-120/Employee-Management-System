@@ -32,7 +32,7 @@ namespace Employee_Management_System.Services
                 Console.WriteLine($"Employee {name} Added to Onboarding Queue successfully!");
                 Actions($"Added {name} to Onboarding Queue!");
                 empId++;
-            }           
+            }
         }
 
         // Add a Department
@@ -55,6 +55,33 @@ namespace Employee_Management_System.Services
         public void Actions(string action)
         {
             ActionsHistory.Push(action);
+        }
+
+        // Adding skills to HashSet to Avoid dublications
+        public void Addskills(string skill)
+        {
+            UniqueSkills.Add(skill);
+        }
+
+        // Process Onboarding Queue
+        public void OnboardingProcessing(HashSet<string> skills)
+        {
+            if (OnBoarding.Count > 0)
+            {
+                foreach (var skill in skills)
+                {
+                    Addskills(skill);
+                }
+
+                var emp = OnBoarding.Peek();
+                Console.WriteLine($"Employee Name: {emp.Name}, Id: {emp.Id} ,Department Id: {emp.DepartmentId} Added to the Active Employee List");
+                ActiveEmployees.Add(emp);
+                OnBoarding.Dequeue();
+            }
+            else
+            {
+                Console.WriteLine("Onboarding Queue is Empty!");
+            }
         }
     }
 }
