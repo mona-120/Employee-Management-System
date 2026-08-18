@@ -83,5 +83,64 @@ namespace Employee_Management_System.Services
                 Console.WriteLine("Onboarding Queue is Empty!");
             }
         }
+
+
+        // Search for an employee using id or name
+        public void Search(int? id , string? name)
+        {
+            bool found = false;
+
+            if (string.IsNullOrEmpty(name) && id == null)
+            {
+                Console.WriteLine("Invalid Operatoin, Please enter name or ID");
+            }
+            else if (!string.IsNullOrWhiteSpace(name))
+            {
+                foreach (var emp in ActiveEmployees)
+                {
+                    if (name == emp.Name)
+                    {
+                        Console.WriteLine($"Found Employee: {emp.Id} , with Salary: {emp.Salary}");
+                        found = true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var emp in ActiveEmployees)
+                {
+                    if (id == emp.Id)
+                    {
+                        Console.WriteLine($"Found Employee: {emp.Name} , with Salary: {emp.Salary}");
+                        found = true;
+                    }
+                }
+            }
+
+            if(!found)
+            {
+                Console.WriteLine("Not Found!");
+            }
+        }
+
+
+        // Display Employee of specific Department
+        public void DisplayEmployee(int deptId)
+        {
+            if (!Departments.ContainsKey(deptId))
+            {
+                Console.WriteLine("This Department isn't Exist, Pleace enter a correct ID!");
+            }
+            else
+            {
+                foreach(var emp in ActiveEmployees)
+                {
+                    if(emp.DepartmentId == deptId)
+                    {
+                        Console.WriteLine(emp.Name);
+                    }
+                }
+            }
+        }
     }
 }
