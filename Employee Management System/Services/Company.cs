@@ -142,5 +142,29 @@ namespace Employee_Management_System.Services
                 }
             }
         }
+
+
+        // Get Departments Reports
+        public void GetDepartmentReports()
+        {
+            foreach(var deptId in Departments.Keys)
+            {
+                decimal TotalSalary = 0;
+                int empNum = 0;
+                foreach (var emp in ActiveEmployees)
+                {
+                    if(emp.DepartmentId == deptId)
+                    {
+                        TotalSalary += emp.Salary;
+                        empNum++;
+                    }
+                }
+                if(empNum == 0) { Console.WriteLine("This Department doesn't contain employees!"); }
+                else
+                {
+                    Console.WriteLine($"Department Id: {deptId} , Name: {Departments[deptId]}, With Avarage Salary: {TotalSalary / empNum}");
+                }
+            }
+        }
     }
 }
