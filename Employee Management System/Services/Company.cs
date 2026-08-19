@@ -22,10 +22,6 @@ namespace Employee_Management_System.Services
         // Add new Employee to Onboarding Queue
         public void AddNewEmployee(string name, int departmentId, decimal salary, string? empSkill)
         {
-            if(!string.IsNullOrWhiteSpace(empSkill))
-            {
-                Addskill(empSkill);
-            }
             if(string.IsNullOrWhiteSpace(name) || !Departments.ContainsKey(departmentId) || salary < 0)
             {
                 throw new Exception("Invalid process");
@@ -37,6 +33,10 @@ namespace Employee_Management_System.Services
                 Console.WriteLine($"Employee {name} Added to Onboarding Queue successfully!");
                 Actions($"Added {name} to Onboarding Queue!");
                 empId++;
+            }
+            if (!string.IsNullOrWhiteSpace(empSkill))
+            {
+                Addskill(empSkill);
             }
         }
 
@@ -65,12 +65,8 @@ namespace Employee_Management_System.Services
         // Adding skills of an employee to HashSet to Avoid dublications
         public void Addskill(string skill)
         {
-          int cnt = UniqueSkills.Count();
           UniqueSkills.Add(skill); 
-          if(cnt < UniqueSkills.Count())
-            {
-                Actions($"New Skill '{skill}' added");
-            }
+          Actions($"New Skill '{skill}' added");
         }
 
 
@@ -224,23 +220,20 @@ namespace Employee_Management_System.Services
         // Seeding Data
         public void DataSeeding()
         {
-            // Add employee in Onboarding List
-            OnBoarding.Enqueue(new Employee(empId,"Mohamed",1,15000));
-            OnBoarding.Enqueue(new Employee(empId, "Ahmed", 2, 10000));
-            OnBoarding.Enqueue(new Employee(empId, "Aya", 1, 18000));
-
             // Add Department
-            Departments.Add(1,"Backend");
-            Departments.Add(2, "HR");
-            Departments.Add(3, "Frontend");
+            AddDepartment("Backend");
+            AddDepartment("HR");
+            AddDepartment("Frontend");
 
-            // Add new employee in Active Employees
-            ActiveEmployees.Add(new Employee(empId,"Omar",3,18000));
-            ActiveEmployees.Add(new Employee(empId, "Hoda", 2, 20000));
+
+            // Add employee in Onboarding List
+            AddNewEmployee("Mohamed", 1, 15000,"C#");
+            AddNewEmployee("Ahmed", 2, 10000, "Java");
+
 
             // Add Skills
+            UniqueSkills.Add("SQL");
             UniqueSkills.Add("C#");
-            UniqueSkills.Add("Java");
 
         }
     }
