@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Employee_Management_System.Services
@@ -19,11 +20,15 @@ namespace Employee_Management_System.Services
 
 
         // Add new Employee to Onboarding Queue
-        public void AddNewEmployee(string name, int departmentId, decimal salary)
+        public void AddNewEmployee(string name, int departmentId, decimal salary, string? empSkill)
         {
+            if(!string.IsNullOrWhiteSpace(empSkill))
+            {
+                Addskill(empSkill);
+            }
             if(string.IsNullOrWhiteSpace(name) || !Departments.ContainsKey(departmentId) || salary < 0)
             {
-                throw new Exception("Invalid addition");
+                throw new Exception("Invalid process");
             }
             else
             {
@@ -40,7 +45,7 @@ namespace Employee_Management_System.Services
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new Exception("Invalid addition");
+                throw new Exception("Invalid process");
             }
             else
             {
@@ -51,30 +56,32 @@ namespace Employee_Management_System.Services
             }
         }
 
-        // Action History
+        // Tracking Action History
         public void Actions(string action)
         {
             ActionsHistory.Push(action);
         }
 
-        // Adding skills to HashSet to Avoid dublications
-        public void Addskills(string skill)
+        // Adding skills of an employee to HashSet to Avoid dublications
+        public void Addskill(string skill)
         {
-            UniqueSkills.Add(skill);
+          int cnt = UniqueSkills.Count();
+          UniqueSkills.Add(skill); 
+          if(cnt < UniqueSkills.Count())
+            {
+                Actions($"New Skill '{skill}' added");
+            }
         }
 
+
         // Process Onboarding Queue
-        public void OnboardingProcessing(HashSet<string> skills)
+        public void OnboardingProcessing()
         {
             if (OnBoarding.Count > 0)
             {
-                foreach (var skill in skills)
-                {
-                    Addskills(skill);
-                }
-
                 var emp = OnBoarding.Peek();
                 Console.WriteLine($"Employee Name: {emp.Name}, Id: {emp.Id} ,Department Id: {emp.DepartmentId} Added to the Active Employee List");
+                ActionsHistory.Push($"Added employee: {emp.Name} in ActiveEmployees List");
                 ActiveEmployees.Add(emp);
                 OnBoarding.Dequeue();
             }
@@ -90,7 +97,7 @@ namespace Employee_Management_System.Services
         {
             bool found = false;
 
-            if (string.IsNullOrEmpty(name) && id == null)
+            if (string.IsNullOrWhiteSpace(name) && id == null)
             {
                 Console.WriteLine("Invalid Operatoin, Please enter name or ID");
             }
@@ -165,6 +172,76 @@ namespace Employee_Management_System.Services
                     Console.WriteLine($"Department Id: {deptId} , Name: {Departments[deptId]}, With Avarage Salary: {TotalSalary / empNum}");
                 }
             }
+        }
+
+
+        // number of employees in each department
+        public void EmployeeNumber()
+        {
+            foreach(var dept in Departments)
+            {
+                int empNum = 0;
+                foreach(var emp in ActiveEmployees)
+                {
+                    if (emp.DepartmentId == dept.Key)
+                    {
+                        empNum++;
+                    }
+                }
+                Console.WriteLine($"Department: {dept.Value} ,with Id: {dept.Key} has {empNum} employees");
+            }
+        }
+
+
+        // Display Action History
+        public void DisplayActionHistory()
+        {
+            if(ActionsHistory.Count == 0)
+            {
+                Console.WriteLine("No Actions to display");
+            }
+            foreach(var action in ActionsHistory)
+            {
+                Console.WriteLine(action);
+            }
+        }
+
+
+        // Display Unique Skills
+        public void DisplayUniqueSkills()
+        {
+            if(UniqueSkills.Count == 0)
+            {
+                Console.WriteLine("No Skills to display");
+            }
+            foreach(var sk in UniqueSkills)
+            {
+                Console.WriteLine(sk);
+            }
+        }
+
+
+        // Seeding Data
+        public void DataSeeding()
+        {
+            // Add employee in Onboarding List
+            OnBoarding.Enqueue(new Employee(empId,"Mohamed",1,15000));
+            OnBoarding.Enqueue(new Employee(empId, "Ahmed", 2, 10000));
+            OnBoarding.Enqueue(new Employee(empId, "Aya", 1, 18000));
+
+            // Add Department
+            Departments.Add(1,"Backend");
+            Departments.Add(2, "HR");
+            Departments.Add(3, "Frontend");
+
+            // Add new employee in Active Employees
+            ActiveEmployees.Add(new Employee(empId,"Omar",3,18000));
+            ActiveEmployees.Add(new Employee(empId, "Hoda", 2, 20000));
+
+            // Add Skills
+            UniqueSkills.Add("C#");
+            UniqueSkills.Add("Java");
+
         }
     }
 }

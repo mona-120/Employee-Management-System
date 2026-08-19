@@ -1,4 +1,6 @@
-﻿namespace Employee_Management_System
+﻿using Employee_Management_System.Services;
+
+namespace Employee_Management_System
 {
     internal class Program
     {
