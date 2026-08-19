@@ -21,4 +21,5 @@ C# console App That demonstrate collections in C# (List, Dictionary, Queue, Stac
 * Queue allow us to access employee in onboarding list in order as it work with FIFO.
 * In our system we store Actions History that allow us to only display actions not make undo process that need to apply the opposite process.
 * Using HashSet prevent duplicates as when we store an element in HashSet, it gives element a Hash code and when adding new element it check equality if Hash Code already exist that prevent duplication in O(1), Unlike List that need to make loop and condition to make sure that the element doesn't exist in the list.
+* we would use IEnumerable<T> when we only need to display or read data and don't need to modify it. It is more flexible because it can represent different types of collections.
 
