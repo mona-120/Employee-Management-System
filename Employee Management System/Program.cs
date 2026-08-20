@@ -91,6 +91,9 @@ namespace Employee_Management_System
                         case 11:
                             Environment.Exit(0);
                             break;
+                       default:
+                           Console.WriteLine("Invalid choice, please try again!");
+                           break;   
                     }
 
                 }catch (Exception ex)
